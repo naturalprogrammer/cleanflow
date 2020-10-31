@@ -1,4 +1,4 @@
-package com.naturalprogrammer.visualflow.services;
+package com.naturalprogrammer.cleanflow.services;
 
 import java.util.HashMap;
 import java.util.Map;

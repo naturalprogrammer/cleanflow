@@ -1,4 +1,4 @@
-package com.naturalprogrammer.visualflow;
+package com.naturalprogrammer.cleanflow;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.naturalprogrammer.visualflow;
+package com.naturalprogrammer.cleanflow;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -20,24 +20,48 @@ import java.util.stream.Collectors;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * Holds all the parsed CleanFlows
+ */
 @Slf4j
-public class VisualFlowCache {
+public class CleanFlowCache {
 
-    private static final VisualFlowCache INSTANCE = new VisualFlowCache();
+    private static final CleanFlowCache CACHE = new CleanFlowCache();
 
-    private final Map<String, VisualFlow> parsedFlows = new ConcurrentHashMap<>();
+    private final Map<String, CleanFlow> parsedFlows = new ConcurrentHashMap<>();
     private final XPathFactory xPathFactory = XPathFactory.newInstance();
 
-    public static VisualFlow get(final String path, Class<?> caller) {
-        return INSTANCE.parseIfAbsent(path, caller);
+    /**
+     * Gets a parsed CleanFlow from the static singleton CACHE. If not parsed yet, first parse it.
+     *
+     * @param   path    Classpath of the diagram
+     * @param   caller  The caller service class
+     * @return  The parsed CleanFlow
+     */
+    public static CleanFlow get(final String path, Class<?> caller) {
+        return CACHE.parseIfAbsent(path, caller);
     }
 
-    public VisualFlow parseIfAbsent(final String flow, Class<?> caller) {
-        return parsedFlows.computeIfAbsent(flow, path -> parse(path, caller));
+    /**
+     * Gets a parsed CleanFlow from the static singleton CACHE. If not parsed yet, first parse it.
+     *
+     * @param   path    Classpath of the diagram
+     * @param   caller  The caller service class
+     * @return  The parsed CleanFlow
+     */
+    public CleanFlow parseIfAbsent(final String path, Class<?> caller) {
+        return parsedFlows.computeIfAbsent(path, key -> parse(key, caller));
     }
 
+    /**
+     * Parses the diagram in the given path
+     *
+     * @param path Path of the diagram
+     * @param caller The caller service
+     * @return the parsed CleanFlow
+     */
     @SneakyThrows
-    private VisualFlow parse(String path, Class<?> caller) {
+    private CleanFlow parse(String path, Class<?> caller) {
 
         try (InputStream input = getClass().getClassLoader().getResourceAsStream(path)) {
 
@@ -59,22 +83,32 @@ public class VisualFlowCache {
             log.info("Found methods {}", methods.keySet());
 
             // Build the flow object graph
-            FlowObject start = buildFlowObject(xmlDocument, xPath, startNodeId, methods, new HashMap<>(40));
+            FlowObject start = parseFlowObject(xmlDocument, xPath, startNodeId, methods, new HashMap<>(40));
             logParsedFlow(path, start);
-            return new VisualFlow(start);
+            return new CleanFlow(start);
         }
     }
 
-    private FlowObject buildFlowObject(Document xmlDocument,
+    /**
+     * Parses a FlowObject along with its children
+     * @param xmlDocument   The given diagram
+     * @param xPath         An xPath
+     * @param flowObjectId  The id of the FlowObject to parse
+     * @param methods       Methods in the service
+     * @param alreadyParsed  A cache of already parsed FlowObjects
+     *
+     * @return  The FlowObject
+     */
+    private FlowObject parseFlowObject(Document xmlDocument,
                                        XPath xPath,
                                        String flowObjectId,
                                        Map<String, Method> methods,
-                                       Map<String, FlowObject> alreadyBuilt)
+                                       Map<String, FlowObject> alreadyParsed)
             throws XPathExpressionException, NoSuchMethodException {
 
         log.info("Building {}", flowObjectId);
 
-        FlowObject flowObject = alreadyBuilt.get(flowObjectId);
+        FlowObject flowObject = alreadyParsed.get(flowObjectId);
         if (flowObject != null) {
             log.info("{} already built", flowObjectId);
             return flowObject;
@@ -93,20 +127,23 @@ public class VisualFlowCache {
         });
 
         flowObject = builder.build();
-        alreadyBuilt.put(flowObjectId, flowObject);
+        alreadyParsed.put(flowObjectId, flowObject);
 
         // Traverse connections
-        flowObject.setConnections(getConnections(xmlDocument, xPath, flowObjectId, methods, alreadyBuilt));
+        flowObject.setConnections(parseConnections(xmlDocument, xPath, flowObjectId, methods, alreadyParsed));
 
         log.info("Built {}: {}", flowObjectId, flowObject);
         return flowObject;
     }
 
-    private List<Connection> getConnections(Document xmlDocument,
-                                            XPath xPath,
-                                            String flowObjectId,
-                                            Map<String, Method> methods,
-                                            Map<String, FlowObject> alreadyBuiltFlowObjects)
+    /**
+     * Parses connections of the given FlowObject
+     */
+    private List<Connection> parseConnections(Document xmlDocument,
+                                              XPath xPath,
+                                              String flowObjectId,
+                                              Map<String, Method> methods,
+                                              Map<String, FlowObject> alreadyParsedFlowObjects)
             throws XPathExpressionException, NoSuchMethodException {
 
         // Get the list of connection names
@@ -125,7 +162,7 @@ public class VisualFlowCache {
             String connectionName = connectionNames.item(i) == null ? null : connectionNames.item(i).getNodeValue();
             log.info("Traversing from {} to {} via connection {} - {}", flowObjectId, connectedNodeId, i + 1, connectionName);
 
-            FlowObject target = buildFlowObject(xmlDocument, xPath, connectedNodeId, methods, alreadyBuiltFlowObjects);
+            FlowObject target = parseFlowObject(xmlDocument, xPath, connectedNodeId, methods, alreadyParsedFlowObjects);
             Connection connection = new Connection(connectionName, target);
             connections.add(connection);
             log.info("Added connection {}", connection);

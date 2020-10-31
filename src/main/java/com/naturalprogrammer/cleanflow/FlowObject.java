@@ -1,12 +1,16 @@
-package com.naturalprogrammer.visualflow;
+package com.naturalprogrammer.cleanflow;
 
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
+import lombok.Setter;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
+/**
+ * Represents a node in the diagram
+ */
 @Getter
 @Builder
 public class FlowObject {
@@ -16,6 +20,7 @@ public class FlowObject {
     private final List<String> parameterNames;
     private final List<String> returnValueNames;
 
+    @Setter(AccessLevel.PACKAGE)
     private List<Connection> connections;
 
     @Override
@@ -25,9 +30,5 @@ public class FlowObject {
                 + ", parameterNames=" + parameterNames
                 + ", returnValueNames=" + returnValueNames
                 + ", next-count=" + (connections == null ? 0 : connections.size()) + ")";
-    }
-
-    void setConnections(List<Connection> connections) {
-        this.connections = connections;
     }
 }

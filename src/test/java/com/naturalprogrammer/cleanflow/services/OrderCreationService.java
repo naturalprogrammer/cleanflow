@@ -1,17 +1,17 @@
-package com.naturalprogrammer.visualflow.services;
+package com.naturalprogrammer.cleanflow.services;
 
-import com.naturalprogrammer.visualflow.Returns;
-import com.naturalprogrammer.visualflow.VisualFlow;
-import com.naturalprogrammer.visualflow.domain.Customer;
-import com.naturalprogrammer.visualflow.domain.OrderForm;
-import com.naturalprogrammer.visualflow.domain.OrderResource;
-import com.naturalprogrammer.visualflow.domain.Product;
+import com.naturalprogrammer.cleanflow.Returns;
+import com.naturalprogrammer.cleanflow.CleanFlow;
+import com.naturalprogrammer.cleanflow.domain.Customer;
+import com.naturalprogrammer.cleanflow.domain.OrderForm;
+import com.naturalprogrammer.cleanflow.domain.OrderResource;
+import com.naturalprogrammer.cleanflow.domain.Product;
 import lombok.Setter;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.naturalprogrammer.visualflow.services.Utils.mapOf;
+import static com.naturalprogrammer.cleanflow.services.Utils.mapOf;
 
 @Setter
 public class OrderCreationService {
@@ -22,8 +22,8 @@ public class OrderCreationService {
     public OrderResource createOrder(OrderForm orderForm) {
 
         log.info("Creating order " + orderForm);
-        OrderResource resource = (OrderResource) VisualFlow
-                .execute("visual-flows/create-order.bpmn", this,
+        OrderResource resource = (OrderResource) CleanFlow
+                .execute("clean-flows/create-order.bpmn", this,
                         mapOf("orderForm", orderForm))
                 .get("orderResource");
 

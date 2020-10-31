@@ -1,8 +1,8 @@
-package com.naturalprogrammer.visualflow;
+package com.naturalprogrammer.cleanflow;
 
-import com.naturalprogrammer.visualflow.domain.OrderForm;
-import com.naturalprogrammer.visualflow.services.Logger;
-import com.naturalprogrammer.visualflow.services.OrderCreationService;
+import com.naturalprogrammer.cleanflow.domain.OrderForm;
+import com.naturalprogrammer.cleanflow.services.Logger;
+import com.naturalprogrammer.cleanflow.services.OrderCreationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

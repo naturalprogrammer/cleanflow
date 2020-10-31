@@ -1,4 +1,4 @@
-package com.naturalprogrammer.visualflow.domain;
+package com.naturalprogrammer.cleanflow.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +7,7 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 @AllArgsConstructor
-public class OrderResource {
+public class Customer {
 
-    private Integer customerId;
-    private Integer orderId;
+    private Integer id;
 }

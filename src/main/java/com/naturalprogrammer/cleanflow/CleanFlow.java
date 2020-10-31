@@ -1,4 +1,4 @@
-package com.naturalprogrammer.visualflow;
+package com.naturalprogrammer.cleanflow;
 
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @Slf4j
 @AllArgsConstructor
-public class VisualFlow {
+public class CleanFlow {
 
     /**
      * Start node
@@ -34,7 +34,7 @@ public class VisualFlow {
      */
     public static Map<String, Object> execute(String path, Object service, Map<String, Object> variables) {
 
-        return VisualFlowCache
+        return CleanFlowCache
                 .get(path, service.getClass())
                 .execute(service, variables);
     }
@@ -58,7 +58,7 @@ public class VisualFlow {
     @SneakyThrows
     private void executeFlowObjectAndChildren(FlowObject flowObject, Object service, Map<String, Object> variables) {
 
-        log.info("Executing flowObject *********** resume from here {} in service ", flowObject.getMethod() == null ? "null" : flowObject.getMethod().getName());
+        log.debug("Executing {} ... ", flowObject);
         Object returnValue = executeFlowObject(flowObject, service, variables);
 
         flowObject.getConnections().forEach(child -> {
@@ -85,8 +85,11 @@ public class VisualFlow {
 
     @SneakyThrows
     private Object invoke(Object service, Method method, List<Object> parameters) {
+
         try {
+            log.debug("Invoking {} with {} parameters", method.getName(), parameters.size());
             return method.invoke(service, parameters.toArray());
+
         } catch (InvocationTargetException ex) {
             throw ex.getCause();
         }

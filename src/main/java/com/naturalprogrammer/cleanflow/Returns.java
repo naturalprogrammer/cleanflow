@@ -1,4 +1,4 @@
-package com.naturalprogrammer.visualflow;
+package com.naturalprogrammer.cleanflow;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

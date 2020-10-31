@@ -1,4 +1,4 @@
-package com.naturalprogrammer.visualflow;
+package com.naturalprogrammer.cleanflow;
 
 public enum FlowObjectType {
 
