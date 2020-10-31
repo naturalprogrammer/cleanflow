@@ -2,11 +2,12 @@ package com.naturalprogrammer.visualflow;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  * A connection to a next FlowObject
  */
-@Getter
+@Getter @ToString
 @AllArgsConstructor
 public class Connection {
 

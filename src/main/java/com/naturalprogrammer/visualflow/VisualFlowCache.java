@@ -33,11 +33,11 @@ public class VisualFlowCache {
     }
 
     public VisualFlow parseIfAbsent(final String flow, Class<?> caller) {
-        return parsedFlows.computeIfAbsent(flow, path -> parseFlow(path, caller));
+        return parsedFlows.computeIfAbsent(flow, path -> parse(path, caller));
     }
 
     @SneakyThrows
-    private VisualFlow parseFlow(String path, Class<?> caller) {
+    private VisualFlow parse(String path, Class<?> caller) {
 
         try (InputStream input = getClass().getClassLoader().getResourceAsStream(path)) {
 
@@ -52,10 +52,15 @@ public class VisualFlowCache {
             String startNodeId = (String) xPath.compile(startEventIdPath)
                     .evaluate(xmlDocument, XPathConstants.STRING);
 
+            // Collect all the methods in the service
             Map<String, Method> methods = Arrays.stream(caller.getDeclaredMethods())
                     .collect(toMap(Method::getName, identity()));
 
-            FlowObject start = buildFlowObject(xmlDocument, xPath, startNodeId, methods);
+            log.info("Found methods {}", methods.keySet());
+
+            // Build the flow object graph
+            FlowObject start = buildFlowObject(xmlDocument, xPath, startNodeId, methods, new HashMap<>(40));
+            logParsedFlow(path, start);
             return new VisualFlow(start);
         }
     }
@@ -63,14 +68,23 @@ public class VisualFlowCache {
     private FlowObject buildFlowObject(Document xmlDocument,
                                        XPath xPath,
                                        String flowObjectId,
-                                       Map<String, Method> methods)
+                                       Map<String, Method> methods,
+                                       Map<String, FlowObject> alreadyBuilt)
             throws XPathExpressionException, NoSuchMethodException {
 
-        FlowObject.FlowObjectBuilder builder = FlowObject.builder();
+        log.info("Building {}", flowObjectId);
 
+        FlowObject flowObject = alreadyBuilt.get(flowObjectId);
+        if (flowObject != null) {
+            log.info("{} already built", flowObjectId);
+            return flowObject;
+        }
+
+        FlowObject.FlowObjectBuilder builder = FlowObject.builder();
         FlowObjectType type = getFlowObjectType(xmlDocument, xPath, flowObjectId);
         builder.type(type);
 
+        // Get the method for the flow object
         getMethod(flowObjectId, methods).ifPresent(method -> {
             method.setAccessible(true);
             builder.method(method)
@@ -78,32 +92,43 @@ public class VisualFlowCache {
                     .returnValueNames(getReturnValueNames(method));
         });
 
-        builder.connections(getConnections(xmlDocument, xPath, flowObjectId, methods));
-        return builder.build();
+        flowObject = builder.build();
+        alreadyBuilt.put(flowObjectId, flowObject);
+
+        // Traverse connections
+        flowObject.setConnections(getConnections(xmlDocument, xPath, flowObjectId, methods, alreadyBuilt));
+
+        log.info("Built {}: {}", flowObjectId, flowObject);
+        return flowObject;
     }
 
     private List<Connection> getConnections(Document xmlDocument,
                                             XPath xPath,
                                             String flowObjectId,
-                                            Map<String, Method> methods)
+                                            Map<String, Method> methods,
+                                            Map<String, FlowObject> alreadyBuiltFlowObjects)
             throws XPathExpressionException, NoSuchMethodException {
 
-        String connectionValuePath = "//sequenceFlow[@sourceRef='" + flowObjectId + "']/@name";
-        NodeList connectionValueNodes = (NodeList) xPath.compile(connectionValuePath).evaluate(xmlDocument, XPathConstants.NODESET);
+        // Get the list of connection names
+        String connectionNamePath = "//sequenceFlow[@sourceRef='" + flowObjectId + "']/@name";
+        NodeList connectionNames = (NodeList) xPath.compile(connectionNamePath).evaluate(xmlDocument, XPathConstants.NODESET);
 
+        // Get the list of connected nodes
         String connectedNodesPath = "//sequenceFlow[@sourceRef='" + flowObjectId + "']/@targetRef";
         NodeList connectedNodes = (NodeList) xPath.compile(connectedNodesPath).evaluate(xmlDocument, XPathConstants.NODESET);
 
+        // Build connections by matching connection names and connected nodes
         List<Connection> connections = new ArrayList<>(connectedNodes.getLength());
         for (int i = 0; i < connectedNodes.getLength(); i++) {
 
-            String connectedId = connectedNodes.item(i).getNodeValue();
-            log.debug(connectedId);
+            String connectedNodeId = connectedNodes.item(i).getNodeValue();
+            String connectionName = connectionNames.item(i) == null ? null : connectionNames.item(i).getNodeValue();
+            log.info("Traversing from {} to {} via connection {} - {}", flowObjectId, connectedNodeId, i + 1, connectionName);
 
-            FlowObject target = buildFlowObject(xmlDocument, xPath, connectedId, methods);
-            String value = connectionValueNodes.item(i) == null ? null : connectionValueNodes.item(i).getNodeValue();
-            log.debug("Value {}", value);
-            connections.add(new Connection(value, target));
+            FlowObject target = buildFlowObject(xmlDocument, xPath, connectedNodeId, methods, alreadyBuiltFlowObjects);
+            Connection connection = new Connection(connectionName, target);
+            connections.add(connection);
+            log.info("Added connection {}", connection);
         }
         return connections;
     }
@@ -142,5 +167,32 @@ public class VisualFlowCache {
                 .replaceAll("([A-Z]+)([A-Z][a-z])", "$1_$2")
                 .replaceAll("([a-z])([A-Z])", "$1_$2")
                 .toUpperCase();
+    }
+
+    private void logParsedFlow(String path, FlowObject flowObject) {
+        log.info("---------------------------------" + path + " begin --------------------------------");
+        logParsedFlowObject(0, flowObject, new HashSet<>());
+        log.info("---------------------------------" + path + " end ----------------------------------");
+    }
+
+    private void logParsedFlowObject(int indent, FlowObject flowObject, Set<FlowObject> logged) {
+
+        String indentSpaces = spaces(indent);
+        log.info(indentSpaces + flowObject.toString());
+
+        if (logged.contains(flowObject))
+            return;
+
+        logged.add(flowObject);
+
+        flowObject.getConnections().forEach(connection -> {
+            if (connection.getValue() != null)
+                log.info(indentSpaces + connection.getValue());
+            logParsedFlowObject(indent + 4, connection.getNext(), logged);
+        });
+    }
+
+    private String spaces(int indent) {
+        return String.join("", Collections.nCopies(indent, " "));
     }
 }
