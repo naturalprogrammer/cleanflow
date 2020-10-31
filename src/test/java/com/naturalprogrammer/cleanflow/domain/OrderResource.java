@@ -10,5 +10,5 @@ import lombok.ToString;
 public class OrderResource {
 
     private Integer customerId;
-    private Integer orderId;
+    private Integer productId;
 }

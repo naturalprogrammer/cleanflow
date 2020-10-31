@@ -47,14 +47,6 @@ public class OrderCreationService {
         return Arrays.asList(customer, product);
     }
 
-    private void rejectProductNotShippable(Product product) {
-        reject("product " + product.getId() + " is not shippable to your address");
-    }
-
-    private void rejectNoActiveCard(Product product) {
-        reject("Please add an active card");
-    }
-
     private String productShippableToCustomerAddress(Customer customer, Product product) {
         String shippable = customer.getId() < 10 && product.getId() < 10 ? "YES" : "NO";
         log.info("Shippable: " + shippable);
@@ -65,6 +57,14 @@ public class OrderCreationService {
         String hasCreditCard = customer.getId() < 5 ? "YES" : "NO";
         log.info("Customer has active credit card: " + hasCreditCard);
         return hasCreditCard;
+    }
+
+    private void rejectProductNotShippable(Product product) {
+        reject("product " + product.getId() + " is not shippable to your address");
+    }
+
+    private void rejectNoActiveCard(Product product) {
+        reject("Please add an active card");
     }
 
     @Returns("paymentSucceeded")
@@ -115,6 +115,6 @@ public class OrderCreationService {
 
     private void reject(String message) {
         log.info("Error: " + message);
-        throw new RuntimeException(message);
+        throw new BusinessException(message);
     }
 }

@@ -58,7 +58,7 @@ public class CleanFlow {
     @SneakyThrows
     private void executeFlowObjectAndChildren(FlowObject flowObject, Object service, Map<String, Object> variables) {
 
-        log.debug("Executing {} ... ", flowObject);
+        log.debug("On {}", flowObject);
         Object returnValue = executeFlowObject(flowObject, service, variables);
 
         flowObject.getConnections().forEach(child -> {
