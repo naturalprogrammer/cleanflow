@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0lxv20y" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+  <bpmn:process id="Process_0oktu3c" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_19zlulu</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:exclusiveGateway id="isGoalAchieved" name="Goal achieved?">
+      <bpmn:incoming>Flow_19zlulu</bpmn:incoming>
+      <bpmn:incoming>Flow_01bdsj3</bpmn:incoming>
+      <bpmn:outgoing>Flow_1axnwsv</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ssf5ev</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_19zlulu" sourceRef="StartEvent_1" targetRef="isGoalAchieved" />
+    <bpmn:task id="workHard" name="Work Hard">
+      <bpmn:incoming>Flow_1axnwsv</bpmn:incoming>
+      <bpmn:outgoing>Flow_01bdsj3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1axnwsv" name="NO" sourceRef="isGoalAchieved" targetRef="workHard" />
+    <bpmn:sequenceFlow id="Flow_01bdsj3" sourceRef="workHard" targetRef="isGoalAchieved" />
+    <bpmn:endEvent id="Event_1e6ml53">
+      <bpmn:incoming>Flow_1ssf5ev</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1ssf5ev" name="YES" sourceRef="isGoalAchieved" targetRef="Event_1e6ml53" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0oktu3c">
+      <bpmndi:BPMNEdge id="Flow_19zlulu_di" bpmnElement="Flow_19zlulu">
+        <di:waypoint x="215" y="177" />
+        <di:waypoint x="325" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1axnwsv_di" bpmnElement="Flow_1axnwsv">
+        <di:waypoint x="375" y="177" />
+        <di:waypoint x="530" y="177" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="444" y="159" width="17" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01bdsj3_di" bpmnElement="Flow_01bdsj3">
+        <di:waypoint x="580" y="137" />
+        <di:waypoint x="580" y="90" />
+        <di:waypoint x="350" y="90" />
+        <di:waypoint x="350" y="152" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ssf5ev_di" bpmnElement="Flow_1ssf5ev">
+        <di:waypoint x="350" y="202" />
+        <di:waypoint x="350" y="322" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="354" y="259" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_08dbi50_di" bpmnElement="isGoalAchieved" isMarkerVisible="true">
+        <dc:Bounds x="325" y="152" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="311" y="209" width="77" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0fl7h06_di" bpmnElement="workHard">
+        <dc:Bounds x="530" y="137" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1e6ml53_di" bpmnElement="Event_1e6ml53">
+        <dc:Bounds x="332" y="322" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
