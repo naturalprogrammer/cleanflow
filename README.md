@@ -10,7 +10,7 @@ but also the diagrams soon become out of sync. You can never rely on a
 diagram — whenever you want to check something, you check the code.
   
 CleanFlow solves this issue by letting you move business logic out into elegant diagrams.
-When using CleanCode, business logic is expressed and maintained in diagrams.
+When using CleanFlow, business logic is expressed and maintained in diagrams.
 Code just contains simple methods (hooked into the nodes of the diagram).
 So, no more cumbersome control-flows in your code!
 
@@ -26,7 +26,7 @@ to your developers — it becomes natural
 
 ## Documentation
 
-CleanFlow is not a giant thing — the [getting started guide](https://github.com/naturalprogrammer/cleanflow/wiki/Getting-Started)
+CleanFlow is a JVM based library for expressing business logic in diagrams. The [getting started guide](https://github.com/naturalprogrammer/cleanflow/wiki/Getting-Started)
 covers all its features as of now. And of course, you can refer to the tests for more concrete examples.
 
 ## Help and support
