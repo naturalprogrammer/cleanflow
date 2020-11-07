@@ -7,7 +7,7 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 @AllArgsConstructor
-public class OrderForm {
+public class OrderCreationForm {
 
     private Integer productId;
 }

@@ -26,8 +26,11 @@ to your developers — it becomes natural
 
 ## Documentation
 
-CleanFlow is a JVM based library for expressing business logic in diagrams. The [getting started guide](https://github.com/naturalprogrammer/cleanflow/wiki/Getting-Started)
+CleanFlow is a JVM based library for expressing business logic in diagrams. The [getting started guide](https://github.com/naturalprogrammer/cleanflow/wiki/Getting-Started-With-CleanFlow)
 covers all its features as of now. And of course, you can refer to the tests for more concrete examples.
+
+## Requirements
+* Java 8 or higher
 
 ## Help and support
 

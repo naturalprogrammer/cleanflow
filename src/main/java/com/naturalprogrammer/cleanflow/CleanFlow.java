@@ -6,10 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * The compiled representation of a flow diagram
@@ -48,8 +45,9 @@ public class CleanFlow {
      */
     private Map<String, Object> execute(Object service, Map<String, Object> variables) {
 
-        executeFlowObjectAndChildren(start, service, variables);
-        return variables;
+        Map<String, Object> mutableVariables = new HashMap<>(variables);
+        executeFlowObjectAndChildren(start, service, mutableVariables);
+        return mutableVariables;
     }
 
     /**

@@ -1,6 +1,6 @@
 package com.naturalprogrammer.cleanflow;
 
-import com.naturalprogrammer.cleanflow.domain.OrderForm;
+import com.naturalprogrammer.cleanflow.domain.OrderCreationForm;
 import com.naturalprogrammer.cleanflow.domain.OrderResource;
 import com.naturalprogrammer.cleanflow.services.BusinessException;
 import com.naturalprogrammer.cleanflow.services.Logger;
@@ -34,14 +34,14 @@ class OrderTest
         try {
 
             // when
-            OrderResource resource = service.createOrder(new OrderForm(12));
+            OrderResource resource = service.createOrder(new OrderCreationForm(12));
             fail();
 
         } catch (BusinessException ignored) {
 
             // then
-            verify(logger).info("Creating order OrderForm(productId=12)");
-            verify(logger).info("Validating OrderForm(productId=12)");
+            verify(logger).info("Creating order OrderCreationForm(productId=12)");
+            verify(logger).info("Validating OrderCreationForm(productId=12)");
             verify(logger).info("Logged in customer: Customer(id=12)");
             verify(logger).info("Chosen product: Product(id=12)");
             verify(logger).info("Shippable: NO");
@@ -60,14 +60,14 @@ class OrderTest
         try {
 
             // when
-            OrderResource resource = service.createOrder(new OrderForm(8));
+            OrderResource resource = service.createOrder(new OrderCreationForm(8));
             fail();
 
         } catch (BusinessException ignored) {
 
             // then
-            verify(logger).info("Creating order OrderForm(productId=8)");
-            verify(logger).info("Validating OrderForm(productId=8)");
+            verify(logger).info("Creating order OrderCreationForm(productId=8)");
+            verify(logger).info("Validating OrderCreationForm(productId=8)");
             verify(logger).info("Logged in customer: Customer(id=7)");
             verify(logger).info("Chosen product: Product(id=8)");
             verify(logger).info("Shippable: YES");
@@ -85,11 +85,11 @@ class OrderTest
         service.setCurrentlyLoggedInCustomerId(2);
 
         // when
-        OrderResource resource = service.createOrder(new OrderForm(1));
+        OrderResource resource = service.createOrder(new OrderCreationForm(1));
 
         // then
-        verify(logger).info("Creating order OrderForm(productId=1)");
-        verify(logger).info("Validating OrderForm(productId=1)");
+        verify(logger).info("Creating order OrderCreationForm(productId=1)");
+        verify(logger).info("Validating OrderCreationForm(productId=1)");
         verify(logger).info("Logged in customer: Customer(id=2)");
         verify(logger).info("Chosen product: Product(id=1)");
         verify(logger).info("Shippable: YES");
@@ -111,11 +111,11 @@ class OrderTest
         service.setCurrentlyLoggedInCustomerId(1);
 
         // when
-        OrderResource resource = service.createOrder(new OrderForm(4));
+        OrderResource resource = service.createOrder(new OrderCreationForm(4));
 
         // then
-        verify(logger).info("Creating order OrderForm(productId=4)");
-        verify(logger).info("Validating OrderForm(productId=4)");
+        verify(logger).info("Creating order OrderCreationForm(productId=4)");
+        verify(logger).info("Validating OrderCreationForm(productId=4)");
         verify(logger).info("Logged in customer: Customer(id=1)");
         verify(logger).info("Chosen product: Product(id=4)");
         verify(logger).info("Shippable: YES");
@@ -140,14 +140,14 @@ class OrderTest
         try {
 
             // when
-            OrderResource resource = service.createOrder(new OrderForm(4));
+            OrderResource resource = service.createOrder(new OrderCreationForm(4));
             fail();
 
         } catch (BusinessException ignored) {
 
             // then
-            verify(logger).info("Creating order OrderForm(productId=4)");
-            verify(logger).info("Validating OrderForm(productId=4)");
+            verify(logger).info("Creating order OrderCreationForm(productId=4)");
+            verify(logger).info("Validating OrderCreationForm(productId=4)");
             verify(logger).info("Logged in customer: Customer(id=2)");
             verify(logger).info("Chosen product: Product(id=4)");
             verify(logger).info("Shippable: YES");

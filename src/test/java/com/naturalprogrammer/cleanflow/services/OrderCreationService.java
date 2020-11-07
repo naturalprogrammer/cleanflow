@@ -1,9 +1,9 @@
 package com.naturalprogrammer.cleanflow.services;
 
-import com.naturalprogrammer.cleanflow.Returns;
 import com.naturalprogrammer.cleanflow.CleanFlow;
+import com.naturalprogrammer.cleanflow.Returns;
 import com.naturalprogrammer.cleanflow.domain.Customer;
-import com.naturalprogrammer.cleanflow.domain.OrderForm;
+import com.naturalprogrammer.cleanflow.domain.OrderCreationForm;
 import com.naturalprogrammer.cleanflow.domain.OrderResource;
 import com.naturalprogrammer.cleanflow.domain.Product;
 import lombok.Setter;
@@ -19,12 +19,12 @@ public class OrderCreationService {
     private Logger log;
     private Integer currentlyLoggedInCustomerId;
 
-    public OrderResource createOrder(OrderForm orderForm) {
+    public OrderResource createOrder(OrderCreationForm orderCreationForm) {
 
-        log.info("Creating order " + orderForm);
+        log.info("Creating order " + orderCreationForm);
         OrderResource resource = (OrderResource) CleanFlow
                 .execute("clean-flows/create-order.bpmn", this,
-                        mapOf("orderForm", orderForm))
+                        mapOf("orderCreationForm", orderCreationForm))
                 .get("orderResource");
 
         log.info("Created order " + resource);
@@ -32,17 +32,17 @@ public class OrderCreationService {
     }
 
     @Returns({"customer", "product"})
-    private List<?> validateForm(OrderForm orderForm) {
+    private List<?> validateForm(OrderCreationForm orderCreationForm) {
 
-        log.info("Validating " + orderForm);
+        log.info("Validating " + orderCreationForm);
 
-        if (orderForm.getProductId() == null) {
+        if (orderCreationForm.getProductId() == null) {
             log.info("No product chosen");
             throw new IllegalArgumentException("No product chosen");
         }
 
         Customer customer = getCurrentlyLoggedInCustomer();
-        Product product = getProductById(orderForm.getProductId());
+        Product product = getProductById(orderCreationForm.getProductId());
 
         return Arrays.asList(customer, product);
     }
