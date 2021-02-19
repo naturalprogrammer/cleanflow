@@ -1,5 +1,7 @@
 # CleanFlow
 
+![https://raw.githubusercontent.com/naturalprogrammer/cleanflow/master/src/test/resources/clean-flows/create-order.png](https://raw.githubusercontent.com/naturalprogrammer/cleanflow/master/src/test/resources/clean-flows/create-order.png)
+
 "A picture is worth a thousand words" is very true in programming.
 So, many of us use diagrams (e.g. activity or sequence diagrams) when coding complex business logic.
 That not only helps to grasp the logic, but also puts all the stakeholders —
