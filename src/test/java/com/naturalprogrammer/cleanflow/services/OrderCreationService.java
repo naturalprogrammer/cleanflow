@@ -69,8 +69,8 @@ public class OrderCreationService {
         return shippable;
     }
 
-    private String customerHasAnActiveCreditCard(Customer customer) {
-        String hasCreditCard = customer.getId() < 5 ? "YES" : "NO";
+    private boolean customerHasAnActiveCreditCard(Customer customer) {
+        boolean hasCreditCard = customer.getId() < 5;
         log.info("Customer has active credit card: " + hasCreditCard);
         return hasCreditCard;
     }

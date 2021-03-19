@@ -31,6 +31,9 @@ import java.util.*;
 @AllArgsConstructor
 public class CleanFlow {
 
+    private static final Set<String> TRUE_STRING = new HashSet<>(Arrays.asList("YES", "TRUE"));
+    private static final Set<String> FALSE_STRING = new HashSet<>(Arrays.asList("NO", "FALSE"));
+
     /**
      * Start node
      */
@@ -114,7 +117,16 @@ public class CleanFlow {
         if (!FlowObjectType.EXCLUSIVE_GATEWAY.equals(type))
             return true;
 
-        return returnValue.toString().equals(child.getValue());
+        return resembles(returnValue, child.getValue());
+    }
+
+    private boolean resembles(Object returnValue, String connectionValue) {
+
+        if (returnValue instanceof Boolean)
+            return Boolean.TRUE.equals(returnValue) && TRUE_STRING.contains(connectionValue) ||
+                    Boolean.FALSE.equals(returnValue) && FALSE_STRING.contains(connectionValue);
+        else
+            return returnValue.toString().equals(connectionValue);
     }
 
     private List<Object> getParameters(FlowObject flowObject, Map<String, Object> variables) {

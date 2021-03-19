@@ -87,7 +87,7 @@ class OrderTest
             verify(logger).info("Logged in customer: Customer(id=7)");
             verify(logger).info("Chosen product: Product(id=8)");
             verify(logger).info("Shippable: YES");
-            verify(logger).info("Customer has active credit card: NO");
+            verify(logger).info("Customer has active credit card: false");
             verify(logger).info("Error: Please add an active card");
 
             verifyNoMoreInteractions(logger);
@@ -109,7 +109,7 @@ class OrderTest
         verify(logger).info("Logged in customer: Customer(id=2)");
         verify(logger).info("Chosen product: Product(id=1)");
         verify(logger).info("Shippable: YES");
-        verify(logger).info("Customer has active credit card: YES");
+        verify(logger).info("Customer has active credit card: true");
         verify(logger).info("Payment succeeded: true");
         verify(logger).info("Payment succeeded: YES");
         verify(logger).info("OrderResource(customerId=2, productId=1)");
@@ -135,7 +135,7 @@ class OrderTest
         verify(logger).info("Logged in customer: Customer(id=1)");
         verify(logger).info("Chosen product: Product(id=4)");
         verify(logger).info("Shippable: YES");
-        verify(logger).info("Customer has active credit card: YES");
+        verify(logger).info("Customer has active credit card: true");
         verify(logger).info("Payment succeeded: false");
         verify(logger).info("Payment succeeded: NO");
         verify(logger).info("Eligible for CoD: YES");
@@ -167,7 +167,7 @@ class OrderTest
             verify(logger).info("Logged in customer: Customer(id=2)");
             verify(logger).info("Chosen product: Product(id=4)");
             verify(logger).info("Shippable: YES");
-            verify(logger).info("Customer has active credit card: YES");
+            verify(logger).info("Customer has active credit card: true");
             verify(logger).info("Payment succeeded: false");
             verify(logger).info("Payment succeeded: NO");
             verify(logger).info("Eligible for CoD: NO");
