@@ -19,7 +19,18 @@ package com.naturalprogrammer.cleanflow;
 public enum FlowObjectType {
 
     START_EVENT,
+    END_EVENT,
+
     TASK,
-    EXCLUSIVE_GATEWAY,
-    END_EVENT
+    SEND_TASK,
+    RECEIVE_TASK,
+    USER_TASK,
+    MANUAL_TASK,
+    BUSINESS_RULE_TASK,
+    SERVICE_TASK,
+    SCRIPT_TASK,
+    CALL_ACTIVITY,
+    SUB_PROCESS,
+
+    EXCLUSIVE_GATEWAY
 }

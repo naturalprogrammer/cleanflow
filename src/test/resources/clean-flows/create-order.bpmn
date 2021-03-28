@@ -21,10 +21,6 @@
       <bpmn:outgoing>Flow_0km7lid</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_1e13w26" name="YES" sourceRef="productShippableToCustomerAddress" targetRef="customerHasAnActiveCreditCard" />
-    <bpmn:task id="processPayment" name="Process payment">
-      <bpmn:incoming>Flow_0pfsyco</bpmn:incoming>
-      <bpmn:outgoing>Flow_0pcbbdt</bpmn:outgoing>
-    </bpmn:task>
     <bpmn:sequenceFlow id="Flow_0pfsyco" name="YES" sourceRef="customerHasAnActiveCreditCard" targetRef="processPayment" />
     <bpmn:exclusiveGateway id="isPaymentSucceeded" name="Succeeded?">
       <bpmn:incoming>Flow_0pcbbdt</bpmn:incoming>
@@ -74,9 +70,30 @@
     </bpmn:endEvent>
     <bpmn:sequenceFlow id="Flow_0jwennw" sourceRef="createOrderSuccessfully" targetRef="Event_139v63d" />
     <bpmn:sequenceFlow id="Flow_1p2ca30" sourceRef="rejectPaymentProcessingFailed" targetRef="Event_139v63d" />
+    <bpmn:callActivity id="processPayment" name="Process payment">
+      <bpmn:incoming>Flow_0pfsyco</bpmn:incoming>
+      <bpmn:outgoing>Flow_0pcbbdt</bpmn:outgoing>
+    </bpmn:callActivity>
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="exampleVisualFlow">
+      <bpmndi:BPMNEdge id="Flow_1p2ca30_di" bpmnElement="Flow_1p2ca30">
+        <di:waypoint x="1000" y="460" />
+        <di:waypoint x="1370" y="460" />
+        <di:waypoint x="1370" y="195" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0jwennw_di" bpmnElement="Flow_0jwennw">
+        <di:waypoint x="1210" y="177" />
+        <di:waypoint x="1352" y="177" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dd1j9b_di" bpmnElement="Flow_0dd1j9b">
+        <di:waypoint x="600" y="350" />
+        <di:waypoint x="600" y="442" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ax2ac3_di" bpmnElement="Flow_0ax2ac3">
+        <di:waypoint x="450" y="350" />
+        <di:waypoint x="450" y="442" />
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_01h0ynv_di" bpmnElement="Flow_01h0ynv">
         <di:waypoint x="950" y="335" />
         <di:waypoint x="950" y="420" />
@@ -146,23 +163,6 @@
         <di:waypoint x="215" y="177" />
         <di:waypoint x="270" y="177" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0ax2ac3_di" bpmnElement="Flow_0ax2ac3">
-        <di:waypoint x="450" y="350" />
-        <di:waypoint x="450" y="442" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0dd1j9b_di" bpmnElement="Flow_0dd1j9b">
-        <di:waypoint x="600" y="350" />
-        <di:waypoint x="600" y="442" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_0jwennw_di" bpmnElement="Flow_0jwennw">
-        <di:waypoint x="1210" y="177" />
-        <di:waypoint x="1352" y="177" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1p2ca30_di" bpmnElement="Flow_1p2ca30">
-        <di:waypoint x="1000" y="460" />
-        <di:waypoint x="1370" y="460" />
-        <di:waypoint x="1370" y="195" />
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
         <dc:Bounds x="179" y="159" width="36" height="36" />
       </bpmndi:BPMNShape>
@@ -180,9 +180,6 @@
         <bpmndi:BPMNLabel>
           <dc:Bounds x="555" y="115" width="90" height="27" />
         </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0njmvgi_di" bpmnElement="processPayment">
-        <dc:Bounds x="740" y="137" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Gateway_1ygci1n_di" bpmnElement="isPaymentSucceeded" isMarkerVisible="true">
         <dc:Bounds x="925" y="152" width="50" height="50" />
@@ -216,6 +213,9 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_139v63d_di" bpmnElement="Event_139v63d">
         <dc:Bounds x="1352" y="159" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0dqvlsl_di" bpmnElement="processPayment">
+        <dc:Bounds x="740" y="137" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
