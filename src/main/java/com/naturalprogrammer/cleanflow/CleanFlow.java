@@ -56,6 +56,18 @@ public class CleanFlow {
     }
 
     /**
+     * Gets the given flow diagram from cache, and executes it.
+     * (If not found in cache, then first loads it)
+     *
+     * @param path      Path of the diagram. Usuallay a classpath
+     * @param service   Caller service instance
+     * @return Resultant variables, from which caller can pick the relevant ones
+     */
+    public static Map<String, Object> execute(String path, Object service) {
+        return execute(path, service, new HashMap<>());
+    }
+
+    /**
      * Executes this flow with the given service and variables
      *
      * @param service   the calling service instance

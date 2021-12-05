@@ -20,7 +20,8 @@ import com.naturalprogrammer.cleanflow.domain.OrderCreationForm;
 import com.naturalprogrammer.cleanflow.domain.OrderResource;
 import com.naturalprogrammer.cleanflow.services.BusinessException;
 import com.naturalprogrammer.cleanflow.services.Logger;
-import com.naturalprogrammer.cleanflow.services.OrderCreationService;
+import com.naturalprogrammer.cleanflow.services.StatefulOrderCreator;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,77 +34,96 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @ExtendWith(MockitoExtension.class)
-class OrderTest
+class OrderCreationStatefulPatternTest
 {
     @Spy
     private Logger logger;
 
     @InjectMocks
-    private OrderCreationService service;
+    private StatefulOrderCreator statefulCreator;
+
+    @BeforeAll
+    static void setUp() {
+        CleanFlowCache.clear("clean-flows/create-order.bpmn");
+    }
 
     @Test
     void testOrder_NotShippableToAddress() {
 
         // given
-        service.setCurrentlyLoggedInCustomerId(12);
+        statefulCreator.setCurrentlyLoggedInCustomerId(12);
 
         try {
 
             // when
-            OrderResource resource = service.createOrder(new OrderCreationForm(12));
+            OrderResource resource = statefulCreator.createOrder(new OrderCreationForm(12));
             fail();
 
         } catch (BusinessException ignored) {
 
             // then
-            verify(logger).info("Creating order OrderCreationForm(productId=12)");
-            verify(logger).info("Validating OrderCreationForm(productId=12)");
-            verify(logger).info("Logged in customer: Customer(id=12)");
-            verify(logger).info("Chosen product: Product(id=12)");
-            verify(logger).info("Shippable: NO");
-            verify(logger).info("Error: product 12 is not shippable to your address");
-
-            verifyNoMoreInteractions(logger);
+            assertOrderNotShippableToAddress(logger);
         }
+    }
+
+    static void assertOrderNotShippableToAddress(Logger logger) {
+
+        verify(logger).info("Creating order OrderCreationForm(productId=12)");
+        verify(logger).info("Validating OrderCreationForm(productId=12)");
+        verify(logger).info("Logged in customer: Customer(id=12)");
+        verify(logger).info("Chosen product: Product(id=12)");
+        verify(logger).info("Shippable: NO");
+        verify(logger).info("Error: product 12 is not shippable to your address");
+
+        verifyNoMoreInteractions(logger);
     }
 
     @Test
     void testOrder_CustomerHasNoActiveCreditCard() {
 
         // given
-        service.setCurrentlyLoggedInCustomerId(7);
+        statefulCreator.setCurrentlyLoggedInCustomerId(7);
 
         try {
 
             // when
-            OrderResource resource = service.createOrder(new OrderCreationForm(8));
+            OrderResource resource = statefulCreator.createOrder(new OrderCreationForm(8));
             fail();
 
         } catch (BusinessException ignored) {
 
             // then
-            verify(logger).info("Creating order OrderCreationForm(productId=8)");
-            verify(logger).info("Validating OrderCreationForm(productId=8)");
-            verify(logger).info("Logged in customer: Customer(id=7)");
-            verify(logger).info("Chosen product: Product(id=8)");
-            verify(logger).info("Shippable: YES");
-            verify(logger).info("Customer has active credit card: false");
-            verify(logger).info("Error: Please add an active card");
-
-            verifyNoMoreInteractions(logger);
+            assertCustomerHasNoActiveCreditCard(logger);
         }
+    }
+
+    static void assertCustomerHasNoActiveCreditCard(Logger logger) {
+        verify(logger).info("Creating order OrderCreationForm(productId=8)");
+        verify(logger).info("Validating OrderCreationForm(productId=8)");
+        verify(logger).info("Logged in customer: Customer(id=7)");
+        verify(logger).info("Chosen product: Product(id=8)");
+        verify(logger).info("Shippable: YES");
+        verify(logger).info("Customer has active credit card: false");
+        verify(logger).info("Error: Please add an active card");
+
+        verifyNoMoreInteractions(logger);
     }
 
     @Test
     void testOrder_ProcessPaymentSucceeds() {
 
         // given
-        service.setCurrentlyLoggedInCustomerId(2);
+        statefulCreator.setCurrentlyLoggedInCustomerId(2);
 
         // when
-        OrderResource resource = service.createOrder(new OrderCreationForm(1));
+        OrderResource resource = statefulCreator.createOrder(new OrderCreationForm(1));
 
         // then
+        assertProcessPaymentSucceeds(logger, resource);
+    }
+
+    static void assertProcessPaymentSucceeds(Logger logger, OrderResource resource) {
+
         verify(logger).info("Creating order OrderCreationForm(productId=1)");
         verify(logger).info("Validating OrderCreationForm(productId=1)");
         verify(logger).info("Logged in customer: Customer(id=2)");
@@ -124,12 +144,17 @@ class OrderTest
     void testOrder_ProcessPaymentFailedButCustomerEligibleForCoD() {
 
         // given
-        service.setCurrentlyLoggedInCustomerId(1);
+        statefulCreator.setCurrentlyLoggedInCustomerId(1);
 
         // when
-        OrderResource resource = service.createOrder(new OrderCreationForm(4));
+        OrderResource resource = statefulCreator.createOrder(new OrderCreationForm(4));
 
         // then
+        assertProcessPaymentFailedButCustomerEligibleForCoD(logger, resource);
+    }
+
+    static void assertProcessPaymentFailedButCustomerEligibleForCoD(Logger logger, OrderResource resource) {
+
         verify(logger).info("Creating order OrderCreationForm(productId=4)");
         verify(logger).info("Validating OrderCreationForm(productId=4)");
         verify(logger).info("Logged in customer: Customer(id=1)");
@@ -151,29 +176,34 @@ class OrderTest
     void testOrder_CustomerNotEligibleForCoD() {
 
         // given
-        service.setCurrentlyLoggedInCustomerId(2);
+        statefulCreator.setCurrentlyLoggedInCustomerId(2);
 
         try {
 
             // when
-            OrderResource resource = service.createOrder(new OrderCreationForm(4));
+            OrderResource resource = statefulCreator.createOrder(new OrderCreationForm(4));
             fail();
 
         } catch (BusinessException ignored) {
 
             // then
-            verify(logger).info("Creating order OrderCreationForm(productId=4)");
-            verify(logger).info("Validating OrderCreationForm(productId=4)");
-            verify(logger).info("Logged in customer: Customer(id=2)");
-            verify(logger).info("Chosen product: Product(id=4)");
-            verify(logger).info("Shippable: YES");
-            verify(logger).info("Customer has active credit card: true");
-            verify(logger).info("Payment succeeded: false");
-            verify(logger).info("Payment succeeded: NO");
-            verify(logger).info("Eligible for CoD: NO");
-            verify(logger).info("Error: Payment processing failed");
-
-            verifyNoMoreInteractions(logger);
+            assertCustomerNotEligibleForCoD(logger);
         }
+    }
+
+    static void assertCustomerNotEligibleForCoD(Logger logger) {
+
+        verify(logger).info("Creating order OrderCreationForm(productId=4)");
+        verify(logger).info("Validating OrderCreationForm(productId=4)");
+        verify(logger).info("Logged in customer: Customer(id=2)");
+        verify(logger).info("Chosen product: Product(id=4)");
+        verify(logger).info("Shippable: YES");
+        verify(logger).info("Customer has active credit card: true");
+        verify(logger).info("Payment succeeded: false");
+        verify(logger).info("Payment succeeded: NO");
+        verify(logger).info("Eligible for CoD: NO");
+        verify(logger).info("Error: Payment processing failed");
+
+        verifyNoMoreInteractions(logger);
     }
 }

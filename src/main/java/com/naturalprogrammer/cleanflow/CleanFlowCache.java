@@ -48,6 +48,22 @@ public class CleanFlowCache {
     private final XPathFactory xPathFactory = XPathFactory.newInstance();
 
     /**
+     * Clears all parsed CleanFlows from the static singleton CACHE
+     */
+    public static void clear() {
+        CACHE.parsedFlows.clear();
+    }
+
+    /**
+     * Removes the given CleanFlow from the static singleton CACHE
+     *
+     * @param   path    Classpath of the diagram
+     */
+    public static void clear(final String path) {
+        CACHE.parsedFlows.remove(path);
+    }
+
+    /**
      * Gets a parsed CleanFlow from the static singleton CACHE. If not parsed yet, first parse it.
      *
      * @param   path    Classpath of the diagram
