@@ -220,7 +220,30 @@ public class CleanFlowCache {
     private Optional<Method> getMethod(String flowObjectId,
                                        Map<String, Method> methods) {
 
-        return Optional.ofNullable(methods.get(flowObjectId));
+        String methodName = getMethodNameFrom(flowObjectId);
+
+        if (methodName.isEmpty())
+            return Optional.empty();
+
+        return Optional.ofNullable(methods.get(methodName));
+    }
+
+    /**
+     * flowObjectId could be containing dashes,
+     * e.g. isOrderProcessed-2 (when trying to map two flowObjects to the same method)
+     *
+     * So, let's remove everything beginning with dash till the end
+     *
+     * @param flowObjectId ID of the flowObject
+     * @return methodName
+     */
+    private String getMethodNameFrom(String flowObjectId) {
+
+        int dashIndex = flowObjectId.indexOf("-");
+        if (dashIndex == -1) // dash doesn't exist
+            return flowObjectId;
+
+        return flowObjectId.substring(0, dashIndex);
     }
 
     private FlowObjectType getFlowObjectType(Document xmlDocument, XPath xPath, String flowObjectId) throws XPathExpressionException {

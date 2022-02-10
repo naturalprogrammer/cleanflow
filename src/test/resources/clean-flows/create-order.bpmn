@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0sk5z7j" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.2.0">
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0sk5z7j" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.12.0">
   <bpmn:process id="exampleVisualFlow" isExecutable="true">
     <bpmn:startEvent id="StartEvent_1">
       <bpmn:outgoing>Flow_03uyc5m</bpmn:outgoing>
@@ -21,19 +21,19 @@
       <bpmn:outgoing>Flow_0km7lid</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:sequenceFlow id="Flow_1e13w26" name="YES" sourceRef="productShippableToCustomerAddress" targetRef="customerHasAnActiveCreditCard" />
-    <bpmn:sequenceFlow id="Flow_0pfsyco" name="YES" sourceRef="customerHasAnActiveCreditCard" targetRef="processPayment" />
-    <bpmn:exclusiveGateway id="isPaymentSucceeded" name="Succeeded?">
+    <bpmn:sequenceFlow id="Flow_0pfsyco" name="YES" sourceRef="customerHasAnActiveCreditCard" targetRef="processPayment-anything-from-first-dash-is-ignored" />
+    <bpmn:exclusiveGateway id="isPaymentSucceeded-anything-from-first-dash-is-ignored" name="Succeeded?">
       <bpmn:incoming>Flow_0pcbbdt</bpmn:incoming>
       <bpmn:outgoing>Flow_03hoaiw</bpmn:outgoing>
       <bpmn:outgoing>Flow_0vsr4bk</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0pcbbdt" sourceRef="processPayment" targetRef="isPaymentSucceeded" />
-    <bpmn:task id="createOrderSuccessfully" name="Create order">
+    <bpmn:sequenceFlow id="Flow_0pcbbdt" sourceRef="processPayment-anything-from-first-dash-is-ignored" targetRef="isPaymentSucceeded-anything-from-first-dash-is-ignored" />
+    <bpmn:task id="createOrderSuccessfully-2" name="Create order">
       <bpmn:incoming>Flow_03hoaiw</bpmn:incoming>
       <bpmn:incoming>Flow_0nkdbam</bpmn:incoming>
       <bpmn:outgoing>Flow_0jwennw</bpmn:outgoing>
     </bpmn:task>
-    <bpmn:sequenceFlow id="Flow_03hoaiw" name="YES" sourceRef="isPaymentSucceeded" targetRef="createOrderSuccessfully" />
+    <bpmn:sequenceFlow id="Flow_03hoaiw" name="YES" sourceRef="isPaymentSucceeded-anything-from-first-dash-is-ignored" targetRef="createOrderSuccessfully-2" />
     <bpmn:task id="rejectProductNotShippable" name="Reject with message &#34;Product not shippable to your address&#34;">
       <bpmn:incoming>Flow_01bliwx</bpmn:incoming>
       <bpmn:outgoing>Flow_0ax2ac3</bpmn:outgoing>
@@ -49,8 +49,8 @@
       <bpmn:outgoing>Flow_0nkdbam</bpmn:outgoing>
       <bpmn:outgoing>Flow_01h0ynv</bpmn:outgoing>
     </bpmn:exclusiveGateway>
-    <bpmn:sequenceFlow id="Flow_0vsr4bk" name="NO" sourceRef="isPaymentSucceeded" targetRef="isCustomerEligibleForCoD" />
-    <bpmn:sequenceFlow id="Flow_0nkdbam" name="YES" sourceRef="isCustomerEligibleForCoD" targetRef="createOrderSuccessfully" />
+    <bpmn:sequenceFlow id="Flow_0vsr4bk" name="NO" sourceRef="isPaymentSucceeded-anything-from-first-dash-is-ignored" targetRef="isCustomerEligibleForCoD" />
+    <bpmn:sequenceFlow id="Flow_0nkdbam" name="YES" sourceRef="isCustomerEligibleForCoD" targetRef="createOrderSuccessfully-2" />
     <bpmn:task id="rejectPaymentProcessingFailed" name="Reject with message &#34;Payment processing failed&#34;">
       <bpmn:incoming>Flow_01h0ynv</bpmn:incoming>
       <bpmn:outgoing>Flow_1p2ca30</bpmn:outgoing>
@@ -68,9 +68,9 @@
       <bpmn:incoming>Flow_0jwennw</bpmn:incoming>
       <bpmn:incoming>Flow_1p2ca30</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0jwennw" sourceRef="createOrderSuccessfully" targetRef="Event_139v63d" />
+    <bpmn:sequenceFlow id="Flow_0jwennw" sourceRef="createOrderSuccessfully-2" targetRef="Event_139v63d" />
     <bpmn:sequenceFlow id="Flow_1p2ca30" sourceRef="rejectPaymentProcessingFailed" targetRef="Event_139v63d" />
-    <bpmn:callActivity id="processPayment" name="Process payment">
+    <bpmn:callActivity id="processPayment-anything-from-first-dash-is-ignored" name="Process payment">
       <bpmn:incoming>Flow_0pfsyco</bpmn:incoming>
       <bpmn:outgoing>Flow_0pcbbdt</bpmn:outgoing>
     </bpmn:callActivity>
@@ -181,13 +181,13 @@
           <dc:Bounds x="555" y="115" width="90" height="27" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Gateway_1ygci1n_di" bpmnElement="isPaymentSucceeded" isMarkerVisible="true">
+      <bpmndi:BPMNShape id="Gateway_1ygci1n_di" bpmnElement="isPaymentSucceeded-anything-from-first-dash-is-ignored" isMarkerVisible="true">
         <dc:Bounds x="925" y="152" width="50" height="50" />
         <bpmndi:BPMNLabel>
           <dc:Bounds x="919" y="122" width="62" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_03qutgq_di" bpmnElement="createOrderSuccessfully">
+      <bpmndi:BPMNShape id="Activity_03qutgq_di" bpmnElement="createOrderSuccessfully-2">
         <dc:Bounds x="1110" y="137" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_10aosur_di" bpmnElement="rejectProductNotShippable">
@@ -214,7 +214,7 @@
       <bpmndi:BPMNShape id="Event_139v63d_di" bpmnElement="Event_139v63d">
         <dc:Bounds x="1352" y="159" width="36" height="36" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Activity_0dqvlsl_di" bpmnElement="processPayment">
+      <bpmndi:BPMNShape id="Activity_0dqvlsl_di" bpmnElement="processPayment-anything-from-first-dash-is-ignored">
         <dc:Bounds x="740" y="137" width="100" height="80" />
       </bpmndi:BPMNShape>
     </bpmndi:BPMNPlane>
