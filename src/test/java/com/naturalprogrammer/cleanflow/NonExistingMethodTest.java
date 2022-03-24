@@ -16,32 +16,20 @@
 
 package com.naturalprogrammer.cleanflow;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import com.naturalprogrammer.cleanflow.services.NonExistingMethodService;
+import org.junit.jupiter.api.Test;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-public enum FlowObjectType {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    START_EVENT(false),
-    END_EVENT(false),
+class NonExistingMethodTest {
 
-    TASK(true),
-    SEND_TASK(true),
-    RECEIVE_TASK(true),
-    USER_TASK(true),
-    MANUAL_TASK(true),
-    BUSINESS_RULE_TASK(true),
-    SERVICE_TASK(true),
-    SCRIPT_TASK(true),
-    CALL_ACTIVITY(true),
-    SUB_PROCESS(true),
+    private final NonExistingMethodService service = new NonExistingMethodService();
 
-    EXCLUSIVE_GATEWAY(true),
-    INCLUSIVE_GATEWAY(false);
+    @Test
+    void testNonExistingMethod() {
 
-    private final boolean mustBeMapped;
-
-    public boolean mustBeMapped() {
-        return mustBeMapped;
+        UnsupportedOperationException ex = assertThrows(UnsupportedOperationException.class, service::execute);
+        assertEquals("Method not found for flowObjectType TASK having id 'nonExistingMethod'", ex.getMessage());
     }
 }

@@ -27,7 +27,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class LoopingTest {
+class LoopingTest {
 
     @Spy
     private Logger logger;

@@ -20,15 +20,19 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.util.List;
+
+import static java.lang.String.format;
 
 /**
  * Represents a node in the diagram
  */
 @Getter
 @Builder
+@Slf4j
 public class FlowObject {
 
     private final FlowObjectType type;
@@ -46,5 +50,13 @@ public class FlowObject {
                 + ", parameterNames=" + parameterNames
                 + ", returnValueNames=" + returnValueNames
                 + ", next-count=" + (connections == null ? 0 : connections.size()) + ")";
+    }
+
+    public void ensureMapped(String flowObjectId) {
+        if (type.mustBeMapped() && method == null) {
+            String error = format("Method not found for flowObjectType %s having id '%s'", type, flowObjectId);
+            log.error(error);
+            throw new UnsupportedOperationException(error);
+        }
     }
 }

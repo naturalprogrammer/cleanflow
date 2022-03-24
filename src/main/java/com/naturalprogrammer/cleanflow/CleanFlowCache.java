@@ -159,6 +159,8 @@ public class CleanFlowCache {
         });
 
         flowObject = builder.build();
+        flowObject.ensureMapped(flowObjectId);
+
         alreadyParsed.put(flowObjectId, flowObject);
 
         // Traverse connections
