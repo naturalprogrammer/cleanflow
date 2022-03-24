@@ -35,6 +35,7 @@ import static java.lang.String.format;
 @Slf4j
 public class FlowObject {
 
+    private final String id;
     private final FlowObjectType type;
     private final Method method;
     private final List<String> parameterNames;
@@ -46,15 +47,16 @@ public class FlowObject {
     @Override
     public String toString() {
         return type
-                + "(method=" + (method == null ? "null" : method.getName())
+                + "(id=" + id
+                + ", method=" + (method == null ? "null" : method.getName())
                 + ", parameterNames=" + parameterNames
                 + ", returnValueNames=" + returnValueNames
                 + ", next-count=" + (connections == null ? 0 : connections.size()) + ")";
     }
 
-    public void ensureMapped(String flowObjectId) {
+    public void ensureMapped() {
         if (type.mustBeMapped() && method == null) {
-            String error = format("Method not found for flowObjectType %s having id '%s'", type, flowObjectId);
+            String error = format("Method not found for flowObjectType %s having id '%s'", type, id);
             log.error(error);
             throw new UnsupportedOperationException(error);
         }

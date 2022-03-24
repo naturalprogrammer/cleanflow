@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-package com.naturalprogrammer.cleanflow.services;
+package com.naturalprogrammer.cleanflow;
 
-import com.naturalprogrammer.cleanflow.CleanFlow;
+import com.naturalprogrammer.cleanflow.services.NoPathToFollowService;
+import org.junit.jupiter.api.Test;
 
-public class NonExistingMethodService {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-    public void execute() {
-        CleanFlow.execute("clean-flows/non-existing-method.bpmn", this);
+class NoPathToFollowTest {
+
+    private final NoPathToFollowService service = new NoPathToFollowService();
+
+    @Test
+    void testNoPathToFollow() {
+
+        IndexOutOfBoundsException ex = assertThrows(IndexOutOfBoundsException.class, service::execute);
+        assertEquals("No path to follow after EXCLUSIVE_GATEWAY 'isFoo'", ex.getMessage());
     }
 }

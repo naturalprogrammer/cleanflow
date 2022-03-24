@@ -146,8 +146,10 @@ public class CleanFlowCache {
             return flowObject;
         }
 
-        FlowObject.FlowObjectBuilder builder = FlowObject.builder();
         FlowObjectType type = getFlowObjectType(xmlDocument, xPath, flowObjectId);
+
+        FlowObject.FlowObjectBuilder builder = FlowObject.builder();
+        builder.id(flowObjectId);
         builder.type(type);
 
         // Get the method for the flow object
@@ -159,7 +161,7 @@ public class CleanFlowCache {
         });
 
         flowObject = builder.build();
-        flowObject.ensureMapped(flowObjectId);
+        flowObject.ensureMapped();
 
         alreadyParsed.put(flowObjectId, flowObject);
 
@@ -194,6 +196,9 @@ public class CleanFlowCache {
 
             String connectedNodeId = connectedNodes.item(i).getNodeValue();
             String connectionName = connectionNames.item(i) == null ? null : connectionNames.item(i).getNodeValue();
+            if (connectionName != null)
+                connectionName = connectionName.trim();
+
             log.info("Traversing from {} to {} via connection {} - {}", flowObjectId, connectedNodeId, i + 1, connectionName);
 
             FlowObject target = parseFlowObject(xmlDocument, xPath, connectedNodeId, methods, alreadyParsedFlowObjects);
