@@ -61,4 +61,12 @@ public class FlowObject {
             throw new UnsupportedOperationException(error);
         }
     }
+
+    public void ensureConnectionsFollowed(int followCount) {
+        if (!type.followCountIsValid(followCount)) {
+            String error = format("%d paths to follow after %s '%s'", followCount, type, id);
+            log.error(error);
+            throw new IndexOutOfBoundsException(error);
+        }
+    }
 }

@@ -24,9 +24,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-import static com.naturalprogrammer.cleanflow.FlowObjectType.END_EVENT;
-import static java.lang.String.format;
-
 /**
  * The compiled representation of a flow diagram
  */
@@ -100,11 +97,7 @@ public class CleanFlow {
                 connectionsFollowed++;
             }
         }
-        if (flowObject.getType() != END_EVENT && connectionsFollowed == 0) {
-            String error = format("No path to follow after %s '%s'", flowObject.getType(), flowObject.getId());
-            log.error(error);
-            throw new IndexOutOfBoundsException(error);
-        }
+        flowObject.ensureConnectionsFollowed(connectionsFollowed);
     }
 
     /**

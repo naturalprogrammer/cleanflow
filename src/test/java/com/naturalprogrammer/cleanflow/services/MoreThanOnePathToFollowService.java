@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package com.naturalprogrammer.cleanflow;
+package com.naturalprogrammer.cleanflow.services;
 
-import com.naturalprogrammer.cleanflow.services.NoPathToFollowService;
-import org.junit.jupiter.api.Test;
+import com.naturalprogrammer.cleanflow.CleanFlow;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+public class MoreThanOnePathToFollowService {
 
-class NoPathToFollowTest {
+    public void execute() {
+        CleanFlow.execute("clean-flows/more-than-one-path-to-follow.bpmn", this);
+    }
 
-    private final NoPathToFollowService service = new NoPathToFollowService();
-
-    @Test
-    void testNoPathToFollow() {
-
-        IndexOutOfBoundsException ex = assertThrows(IndexOutOfBoundsException.class, service::execute);
-        assertEquals("0 paths to follow after EXCLUSIVE_GATEWAY 'isFoo'", ex.getMessage());
+    public boolean isFoo() {
+        return true;
     }
 }

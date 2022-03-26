@@ -19,29 +19,42 @@ package com.naturalprogrammer.cleanflow;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 
+import java.util.function.IntPredicate;
+
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum FlowObjectType {
 
-    START_EVENT(false),
-    END_EVENT(false),
+    START_EVENT(false, FollowCount.ONE),
+    END_EVENT(false, FollowCount.ZERO),
 
-    TASK(true),
-    SEND_TASK(true),
-    RECEIVE_TASK(true),
-    USER_TASK(true),
-    MANUAL_TASK(true),
-    BUSINESS_RULE_TASK(true),
-    SERVICE_TASK(true),
-    SCRIPT_TASK(true),
-    CALL_ACTIVITY(true),
-    SUB_PROCESS(true),
+    TASK(true, FollowCount.ONE),
+    SEND_TASK(true, FollowCount.ONE),
+    RECEIVE_TASK(true, FollowCount.ONE),
+    USER_TASK(true, FollowCount.ONE),
+    MANUAL_TASK(true, FollowCount.ONE),
+    BUSINESS_RULE_TASK(true, FollowCount.ONE),
+    SERVICE_TASK(true, FollowCount.ONE),
+    SCRIPT_TASK(true, FollowCount.ONE),
+    CALL_ACTIVITY(true, FollowCount.ONE),
+    SUB_PROCESS(true, FollowCount.ONE),
 
-    EXCLUSIVE_GATEWAY(true),
-    INCLUSIVE_GATEWAY(false);
+    EXCLUSIVE_GATEWAY(true, FollowCount.ONE),
+    INCLUSIVE_GATEWAY(false, FollowCount.MORE_THAN_ONE);
 
     private final boolean mustBeMapped;
+    private final IntPredicate validFollowCount;
 
     public boolean mustBeMapped() {
         return mustBeMapped;
+    }
+
+    public boolean followCountIsValid(int followCount) {
+        return validFollowCount.test(followCount);
+    }
+
+    private static class FollowCount {
+        private static final IntPredicate ZERO = followCount -> followCount == 0;
+        private static final IntPredicate ONE = followCount -> followCount == 1;
+        private static final IntPredicate MORE_THAN_ONE = followCount -> followCount > 1;
     }
 }
