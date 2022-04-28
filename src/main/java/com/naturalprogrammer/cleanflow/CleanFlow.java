@@ -74,11 +74,21 @@ public class CleanFlow {
      * @param variables variables that are used in the execution
      * @return Resultant variables, from which caller can pick the relevant ones
      */
-    private Map<String, Object> execute(Object service, Map<String, Object> variables) {
+    public Map<String, Object> execute(Object service, Map<String, Object> variables) {
 
         Map<String, Object> mutableVariables = new HashMap<>(variables);
         executeFlowObjectAndChildren(start, service, mutableVariables);
         return mutableVariables;
+    }
+
+    /**
+     * Executes this flow with the given service
+     *
+     * @param service the calling service instance
+     * @return Resultant variables, from which caller can pick the relevant ones
+     */
+    public Map<String, Object> execute(Object service) {
+        return execute(service, new HashMap<>());
     }
 
     /**
