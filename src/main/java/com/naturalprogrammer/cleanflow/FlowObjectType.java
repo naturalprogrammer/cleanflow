@@ -24,37 +24,42 @@ import java.util.function.IntPredicate;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum FlowObjectType {
 
-    START_EVENT(false, FollowCount.ONE),
-    END_EVENT(false, FollowCount.ZERO),
+    START_EVENT(false, Count.ONE, Count.ONE),
+    END_EVENT(false, Count.ZERO, Count.ZERO),
 
-    TASK(true, FollowCount.ONE),
-    SEND_TASK(true, FollowCount.ONE),
-    RECEIVE_TASK(true, FollowCount.ONE),
-    USER_TASK(true, FollowCount.ONE),
-    MANUAL_TASK(true, FollowCount.ONE),
-    BUSINESS_RULE_TASK(true, FollowCount.ONE),
-    SERVICE_TASK(true, FollowCount.ONE),
-    SCRIPT_TASK(true, FollowCount.ONE),
-    CALL_ACTIVITY(true, FollowCount.ONE),
-    SUB_PROCESS(true, FollowCount.ONE),
+    TASK(true, Count.ONE, Count.ONE),
+    SEND_TASK(true, Count.ONE, Count.ONE),
+    RECEIVE_TASK(true, Count.ONE, Count.ONE),
+    USER_TASK(true, Count.ONE, Count.ONE),
+    MANUAL_TASK(true, Count.ONE, Count.ONE),
+    BUSINESS_RULE_TASK(true, Count.ONE, Count.ONE),
+    SERVICE_TASK(true, Count.ONE, Count.ONE),
+    SCRIPT_TASK(true, Count.ONE, Count.ONE),
+    CALL_ACTIVITY(true, Count.ONE, Count.ONE),
+    SUB_PROCESS(true, Count.ONE, Count.ONE),
 
-    EXCLUSIVE_GATEWAY(true, FollowCount.ONE),
-    INCLUSIVE_GATEWAY(false, FollowCount.MORE_THAN_ONE);
+    EXCLUSIVE_GATEWAY(true, Count.MORE_THAN_ONE, Count.ONE),
+    INCLUSIVE_GATEWAY(false, Count.MORE_THAN_ONE, Count.MORE_THAN_ONE);
 
     private final boolean mustBeMapped;
+    private final IntPredicate validConnectionCount;
     private final IntPredicate validFollowCount;
 
     public boolean mustBeMapped() {
         return mustBeMapped;
     }
 
+    public boolean connectionCountIsValid(int connectionCount) {
+        return validConnectionCount.test(connectionCount);
+    }
+
     public boolean followCountIsValid(int followCount) {
         return validFollowCount.test(followCount);
     }
 
-    private static class FollowCount {
-        private static final IntPredicate ZERO = followCount -> followCount == 0;
-        private static final IntPredicate ONE = followCount -> followCount == 1;
-        private static final IntPredicate MORE_THAN_ONE = followCount -> followCount > 1;
+    private static class Count {
+        private static final IntPredicate ZERO = count -> count == 0;
+        private static final IntPredicate ONE = count -> count == 1;
+        private static final IntPredicate MORE_THAN_ONE = count -> count > 1;
     }
 }

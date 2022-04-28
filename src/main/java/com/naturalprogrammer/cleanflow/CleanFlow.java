@@ -148,11 +148,12 @@ public class CleanFlow {
 
     private boolean resembles(Object returnValue, String connectionValue) {
 
-        if (returnValue instanceof Boolean)
+        if (returnValue instanceof Boolean) {
+            connectionValue = connectionValue.toUpperCase();
             return Boolean.TRUE.equals(returnValue) && TRUE_STRING.contains(connectionValue) ||
                     Boolean.FALSE.equals(returnValue) && FALSE_STRING.contains(connectionValue);
-        else
-            return returnValue.toString().equals(connectionValue);
+        }
+        return returnValue.toString().equals(connectionValue);
     }
 
     private List<Object> getParameters(FlowObject flowObject, Map<String, Object> variables) {
@@ -163,7 +164,7 @@ public class CleanFlow {
 
             Object parameter = variables.get(parameterName);
             if (parameter == null)
-                throw new FlowException(String.format("Couldn't find parameter %s for method %s",
+                throw new FlowException(String.format("Running Failed: Couldn't find parameter %s for method %s",
                         parameterName, flowObject.getMethod().getName()));
 
             parameters.add(variables.get(parameterName));

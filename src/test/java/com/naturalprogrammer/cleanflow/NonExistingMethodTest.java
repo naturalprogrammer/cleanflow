@@ -30,6 +30,6 @@ class NonExistingMethodTest {
     void testNonExistingMethod() {
 
         UnsupportedOperationException ex = assertThrows(UnsupportedOperationException.class, service::execute);
-        assertEquals("Method not found for flowObjectType TASK having id 'nonExistingMethod'", ex.getMessage());
+        assertEquals("Parsing Failed: Method not found for flowObjectType TASK having id 'nonExistingMethod'", ex.getMessage());
     }
 }

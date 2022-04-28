@@ -16,20 +16,20 @@
 
 package com.naturalprogrammer.cleanflow;
 
-import com.naturalprogrammer.cleanflow.services.NoPathToFollowService;
+import com.naturalprogrammer.cleanflow.services.NoPathToFollowAfterActivityService;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class NoPathToFollowTest {
+class NoPathToFollowAfterActivityTest {
 
-    private final NoPathToFollowService service = new NoPathToFollowService();
+    private final NoPathToFollowAfterActivityService service = new NoPathToFollowAfterActivityService();
 
     @Test
-    void testNoPathToFollow() {
+    void testNoPathToFollowAfterActivity() {
 
         IndexOutOfBoundsException ex = assertThrows(IndexOutOfBoundsException.class, service::execute);
-        assertEquals("Running Failed: 0 paths to follow after EXCLUSIVE_GATEWAY 'isFoo'", ex.getMessage());
+        assertEquals("Parsing Failed: 0 paths to follow after TASK 'foo'", ex.getMessage());
     }
 }

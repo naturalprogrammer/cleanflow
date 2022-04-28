@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package com.naturalprogrammer.cleanflow;
+package com.naturalprogrammer.cleanflow.services;
 
-import com.naturalprogrammer.cleanflow.services.NoPathToFollowService;
-import org.junit.jupiter.api.Test;
+import com.naturalprogrammer.cleanflow.CleanFlow;
+import com.naturalprogrammer.cleanflow.CleanFlowParser;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+public class DuplicatePathsToFollowService {
 
-class NoPathToFollowTest {
+    public void execute() {
+        CleanFlow flow = CleanFlowParser
+                .parse("clean-flows/duplicate-paths-to-follow.bpmn",
+                        DuplicatePathsToFollowService.class);
+        flow.execute(this);
+    }
 
-    private final NoPathToFollowService service = new NoPathToFollowService();
-
-    @Test
-    void testNoPathToFollow() {
-
-        IndexOutOfBoundsException ex = assertThrows(IndexOutOfBoundsException.class, service::execute);
-        assertEquals("Running Failed: 0 paths to follow after EXCLUSIVE_GATEWAY 'isFoo'", ex.getMessage());
+    public boolean isFoo() {
+        return true;
     }
 }

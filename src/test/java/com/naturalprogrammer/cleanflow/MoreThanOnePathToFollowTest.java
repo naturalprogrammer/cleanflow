@@ -27,9 +27,9 @@ class MoreThanOnePathToFollowTest {
     private final MoreThanOnePathToFollowService service = new MoreThanOnePathToFollowService();
 
     @Test
-    void testNoPathToFollow() {
+    void testMoreThanOnePathToFollow() {
 
         IndexOutOfBoundsException ex = assertThrows(IndexOutOfBoundsException.class, service::execute);
-        assertEquals("2 paths to follow after EXCLUSIVE_GATEWAY 'isFoo'", ex.getMessage());
+        assertEquals("Running Failed: 2 paths to follow after EXCLUSIVE_GATEWAY 'isFoo'", ex.getMessage());
     }
 }

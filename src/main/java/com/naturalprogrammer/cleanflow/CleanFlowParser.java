@@ -131,14 +131,13 @@ public class CleanFlowParser {
         });
 
         flowObject = builder.build();
-        flowObject.ensureMapped();
-
         alreadyParsed.put(flowObjectId, flowObject);
 
         // Traverse connections
         flowObject.setConnections(parseConnections(xmlDocument, xPath, flowObjectId, methods, alreadyParsed));
 
         log.info("Built {}: {}", flowObjectId, flowObject);
+        flowObject.validate();
         return flowObject;
     }
 

@@ -13,11 +13,11 @@
     <bpmn:endEvent id="Event_0nhhdhe">
       <bpmn:incoming>Flow_0hzhxfm</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0hzhxfm" name="YES" sourceRef="isFoo" targetRef="Event_0nhhdhe" />
+    <bpmn:sequenceFlow id="Flow_0hzhxfm" name="Foo" sourceRef="isFoo" targetRef="Event_0nhhdhe" />
     <bpmn:endEvent id="Event_16dw9td">
       <bpmn:incoming>Flow_0n2yqwp</bpmn:incoming>
     </bpmn:endEvent>
-    <bpmn:sequenceFlow id="Flow_0n2yqwp" name="Yes" sourceRef="isFoo" targetRef="Event_16dw9td" />
+    <bpmn:sequenceFlow id="Flow_0n2yqwp" name="Foo" sourceRef="isFoo" targetRef="Event_16dw9td" />
   </bpmn:process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_15dlnch">
@@ -26,14 +26,14 @@
         <di:waypoint x="290" y="220" />
         <di:waypoint x="442" y="220" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="297" y="173" width="18" height="14" />
+          <dc:Bounds x="297" y="173" width="19" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0hzhxfm_di" bpmnElement="Flow_0hzhxfm">
         <di:waypoint x="315" y="107" />
         <di:waypoint x="442" y="107" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="368" y="89" width="22" height="14" />
+          <dc:Bounds x="370" y="89" width="19" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_05oyw5i_di" bpmnElement="Flow_05oyw5i">

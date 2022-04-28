@@ -24,6 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -54,17 +56,42 @@ public class FlowObject {
                 + ", next-count=" + (connections == null ? 0 : connections.size()) + ")";
     }
 
-    public void ensureMapped() {
+    public void validate() {
+        ensureMapped();
+        validateConnectionCount();
+        if (type.equals(FlowObjectType.EXCLUSIVE_GATEWAY))
+            validateDuplicateConnectionsFromExclusiveGateway();
+    }
+
+    private void ensureMapped() {
         if (type.mustBeMapped() && method == null) {
-            String error = format("Method not found for flowObjectType %s having id '%s'", type, id);
+            String error = format("Parsing Failed: Method not found for flowObjectType %s having id '%s'", type, id);
             log.error(error);
             throw new UnsupportedOperationException(error);
         }
     }
 
+    private void validateDuplicateConnectionsFromExclusiveGateway() {
+        Set<String> connectionNameSet = connections.stream().map(Connection::getValue).collect(Collectors.toSet());
+        if (connectionNameSet.size() < connections.size()) {
+            String error = format("Parsing Failed: %d pair of duplicate connections after EXCLUSIVE_GATEWAY '%s': %s",
+                    connections.size() - connectionNameSet.size(), id, connections);
+            log.error(error);
+            throw new IndexOutOfBoundsException(error);
+        }
+    }
+
+    private void validateConnectionCount() {
+        if (!type.connectionCountIsValid(connections.size())) {
+            String error = format("Parsing Failed: %d paths to follow after %s '%s'", connections.size(), type, id);
+            log.error(error);
+            throw new IndexOutOfBoundsException(error);
+        }
+    }
+
     public void ensureConnectionsFollowed(int followCount) {
         if (!type.followCountIsValid(followCount)) {
-            String error = format("%d paths to follow after %s '%s'", followCount, type, id);
+            String error = format("Running Failed: %d paths to follow after %s '%s'", followCount, type, id);
             log.error(error);
             throw new IndexOutOfBoundsException(error);
         }
