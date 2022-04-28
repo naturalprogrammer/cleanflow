@@ -100,14 +100,14 @@ public class CleanFlow {
         log.debug("On {}", flowObject);
         Object returnValue = executeFlowObject(flowObject, service, variables);
 
-        int connectionsFollowed = 0;
+        int connectionsFollowedCount = 0;
         for (Connection connection : flowObject.getConnections()) {
             if (toFollowConnection(flowObject.getType(), returnValue, connection)) {
                 executeFlowObjectAndChildren(connection.getNext(), service, variables);
-                connectionsFollowed++;
+                connectionsFollowedCount++;
             }
         }
-        flowObject.ensureConnectionsFollowed(connectionsFollowed);
+        flowObject.validateConnectionsFollowedCount(connectionsFollowedCount);
     }
 
     /**
@@ -143,10 +143,10 @@ public class CleanFlow {
         if (!FlowObjectType.EXCLUSIVE_GATEWAY.equals(type))
             return true;
 
-        return resembles(returnValue, connection.getValue());
+        return matches(returnValue, connection.getValue());
     }
 
-    private boolean resembles(Object returnValue, String connectionValue) {
+    private boolean matches(Object returnValue, String connectionValue) {
 
         if (returnValue instanceof Boolean) {
             connectionValue = connectionValue.toUpperCase();

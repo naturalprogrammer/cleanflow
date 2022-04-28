@@ -60,7 +60,7 @@ public class FlowObject {
         ensureMapped();
         validateConnectionCount();
         if (type.equals(FlowObjectType.EXCLUSIVE_GATEWAY))
-            validateDuplicateConnectionsFromExclusiveGateway();
+            validateNoDuplicateConnectionsFromExclusiveGateway();
     }
 
     private void ensureMapped() {
@@ -71,7 +71,7 @@ public class FlowObject {
         }
     }
 
-    private void validateDuplicateConnectionsFromExclusiveGateway() {
+    private void validateNoDuplicateConnectionsFromExclusiveGateway() {
         Set<String> connectionNameSet = connections.stream().map(Connection::getValue).collect(Collectors.toSet());
         if (connectionNameSet.size() < connections.size()) {
             String error = format("Parsing Failed: %d pair of duplicate connections after EXCLUSIVE_GATEWAY '%s': %s",
@@ -89,7 +89,7 @@ public class FlowObject {
         }
     }
 
-    public void ensureConnectionsFollowed(int followCount) {
+    public void validateConnectionsFollowedCount(int followCount) {
         if (!type.followCountIsValid(followCount)) {
             String error = format("Running Failed: %d paths to follow after %s '%s'", followCount, type, id);
             log.error(error);
