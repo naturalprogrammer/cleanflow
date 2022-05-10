@@ -39,7 +39,8 @@ public enum FlowObjectType {
     SUB_PROCESS(true, Count.ONE, Count.ONE),
 
     EXCLUSIVE_GATEWAY(true, Count.MORE_THAN_ONE, Count.ONE),
-    INCLUSIVE_GATEWAY(false, Count.MORE_THAN_ONE, Count.MORE_THAN_ONE);
+    INCLUSIVE_GATEWAY(false, Count.MORE_THAN_ONE, Count.MORE_THAN_ONE),
+    PARALLEL_GATEWAY(false, Count.MORE_THAN_ONE, Count.MORE_THAN_ONE);
 
     private final boolean mustBeMapped;
     private final IntPredicate validConnectionCount;
